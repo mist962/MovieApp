@@ -1,4 +1,4 @@
-package com.sideki.movieapp.models
+package com.sideki.movieapp.model.data
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

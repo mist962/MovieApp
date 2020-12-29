@@ -1,7 +1,6 @@
-package com.sideki.movieapp.request
+package com.sideki.movieapp.api
 
 import com.sideki.movieapp.utils.BASE_URL
-import com.sideki.movieapp.utils.MovieApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
