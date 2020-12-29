@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class MovieModel(
+data class Movie(
     var id: Int,
     var title: String,
     @SerializedName("poster_path")
@@ -14,5 +14,6 @@ data class MovieModel(
     var releaseDate: String,
     var overview: String,
     @SerializedName("vote_average")
-    var voteAverage: Double,
+    var voteAverage: Float, //?//?//?//?//?//?//?//?//?//?Возможная ошибка - было Double
+    var runtime: Int
 ) : Parcelable

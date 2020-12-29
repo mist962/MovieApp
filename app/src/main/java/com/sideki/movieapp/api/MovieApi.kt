@@ -1,7 +1,7 @@
 package com.sideki.movieapp.api
 
-import com.sideki.movieapp.model.data.MovieModel
-import com.sideki.movieapp.model.data.MoviesModel
+import com.sideki.movieapp.model.data.Movie
+import com.sideki.movieapp.model.data.Movies
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -13,7 +13,7 @@ interface MovieApi {
     suspend fun getMovie(
         @Path("movie_id") movie_id: Int,
         @Query("api_key") key: String
-    ): Response<MovieModel>
+    ): Response<Movie>
 
     //https://api.themoviedb.org/3/search/movie?api_key=d27280da3eef410846fedb75cfa2e796&query=Fast&page=1
     @GET("search/movie")
@@ -21,6 +21,6 @@ interface MovieApi {
         @Query("api_key") key: String,
         @Query("query") query: String,
         @Query("page") page: String
-    ): Response<MoviesModel>
+    ): Response<Movies>
 
 }

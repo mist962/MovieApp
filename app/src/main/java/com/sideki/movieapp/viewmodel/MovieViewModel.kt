@@ -3,16 +3,16 @@ package com.sideki.movieapp.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sideki.movieapp.model.data.MovieModel
-import com.sideki.movieapp.model.data.MoviesModel
+import com.sideki.movieapp.model.data.Movie
+import com.sideki.movieapp.model.data.Movies
 import com.sideki.movieapp.model.repository.MovieRepository
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
 
-    val mMovies: MutableLiveData<Response<MovieModel>> = MutableLiveData()
-    val mSearchMovies: MutableLiveData<Response<MoviesModel>> = MutableLiveData()
+    val mMovies: MutableLiveData<Response<Movie>> = MutableLiveData()
+    val mSearchMovies: MutableLiveData<Response<Movies>> = MutableLiveData()
 
     fun getMovies(movie_id: Int, key: String) {
         viewModelScope.launch {
