@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
-    private var movieList = emptyList<Movie>()
+    private var movieList = mutableSetOf<Movie>()
 
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
@@ -20,17 +20,19 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
     )
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val curItem = movieList[position]
+        val curItem = movieList.elementAt(position)
 
-        Glide.with(holder.itemView.context).load("https://image.tmdb.org/t/p/w500" + curItem.posterPath).into(holder.itemView.img_movie)
+        Glide.with(holder.itemView.context)
+            .load("https://image.tmdb.org/t/p/w500" + curItem.posterPath)
+            .into(holder.itemView.img_movie)
         holder.itemView.txt_movie_title.text = curItem.title
-        if(curItem.releaseDate == " "){
+        if (curItem.releaseDate == " ") {
             holder.itemView.txt_movie_relisedate.text = "No Data"
-        }else{
+        } else {
             holder.itemView.txt_movie_relisedate.text = curItem.releaseDate
         }
 
-        holder.itemView.txt_movie_runtime.text = curItem.runtime.toString()
+        holder.itemView.txt_movie_original_language.text = curItem.originalLanguage
 
         holder.itemView.rating_bar.rating = (curItem.voteAverage) / 2
 
@@ -41,8 +43,25 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     override fun getItemCount() = movieList.size
 
-    fun setData(_movieList: List<Movie>) {
-        movieList = _movieList
+    fun setPopularMovies(_movieList: List<Movie>) {
+        movieList.clear()
+        movieList.addAll(_movieList)
+        notifyDataSetChanged()
+    }
+
+    fun setPopularMoviesNextPage(_movieList: List<Movie>) {
+        movieList.addAll(_movieList)
+        notifyDataSetChanged()
+    }
+
+    fun setSearchMovies(_movieList: List<Movie>) {
+        movieList.clear()
+        movieList.addAll(_movieList)
+        notifyDataSetChanged()
+    }
+
+    fun setSearchMoviesNextPage(_movieList: List<Movie>) {
+        movieList.addAll(_movieList)
         notifyDataSetChanged()
     }
 }

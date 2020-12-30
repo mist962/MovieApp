@@ -1,19 +1,18 @@
 package com.sideki.movieapp.api
 
-import com.sideki.movieapp.model.data.Movie
 import com.sideki.movieapp.model.data.Movies
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieApi {
 
-    @GET("movie/{movie_id}")
-    suspend fun getMovie(
-        @Path("movie_id") movie_id: Int,
-        @Query("api_key") key: String
-    ): Response<Movie>
+    //https://api.themoviedb.org/3/movie/popular?api_key=d27280da3eef410846fedb75cfa2e796&page=1
+    @GET("movie/popular")
+    suspend fun getPopularMovies(
+        @Query("api_key") key: String,
+        @Query("page") page: String
+    ): Response<Movies>
 
     //https://api.themoviedb.org/3/search/movie?api_key=d27280da3eef410846fedb75cfa2e796&query=Fast&page=1
     @GET("search/movie")

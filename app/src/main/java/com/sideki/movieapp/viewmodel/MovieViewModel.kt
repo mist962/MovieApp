@@ -3,7 +3,6 @@ package com.sideki.movieapp.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sideki.movieapp.model.data.Movie
 import com.sideki.movieapp.model.data.Movies
 import com.sideki.movieapp.model.repository.MovieRepository
 import kotlinx.coroutines.launch
@@ -11,12 +10,20 @@ import retrofit2.Response
 
 class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
 
-    val mMovies: MutableLiveData<Response<Movie>> = MutableLiveData()
+    val mPopularMovies: MutableLiveData<Response<Movies>> = MutableLiveData()
+    val mPopularMoviesNextPage: MutableLiveData<Response<Movies>> = MutableLiveData()
     val mSearchMovies: MutableLiveData<Response<Movies>> = MutableLiveData()
+    val mSearchMoviesNextPage: MutableLiveData<Response<Movies>> = MutableLiveData()
 
-    fun getMovies(movie_id: Int, key: String) {
+    fun getPopularMovies(key: String, page: String) {
         viewModelScope.launch {
-            mMovies.value = repository.getMovie(movie_id, key)
+            mPopularMovies.value = repository.getPopularMovies(key, page)
+        }
+    }
+
+    fun getPopularMoviesNextPage() {
+        viewModelScope.launch {
+            mPopularMoviesNextPage.value = repository.getPopularMoviesNextPage()
         }
     }
 
@@ -25,4 +32,11 @@ class MovieViewModel(private val repository: MovieRepository) : ViewModel() {
             mSearchMovies.value = repository.searchMovies(key, query, page)
         }
     }
+
+    fun searchMoviesNextPage(query: String) {
+        viewModelScope.launch {
+            mSearchMoviesNextPage.value = repository.searchMoviesNextPage(query)
+        }
+    }
+
 }

@@ -14,6 +14,7 @@ data class Movie(
     var releaseDate: String,
     var overview: String,
     @SerializedName("vote_average")
-    var voteAverage: Float, //?//?//?//?//?//?//?//?//?//?Возможная ошибка - было Double
-    var runtime: Int
+    var voteAverage: Float,
+    @SerializedName("original_language")
+    var originalLanguage: String
 ) : Parcelable
