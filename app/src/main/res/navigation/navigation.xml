@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/moviesListFragment">
+    <fragment
+        android:id="@+id/moviesListFragment"
+        android:name="com.sideki.movieapp.view.fragments.MoviesListFragment"
+        android:label="MovieListFragment" >
+        <action
+            android:id="@+id/action_moviesListFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+        <argument
+            android:name="recycler_position"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="com.sideki.movieapp.view.fragments.MovieDetailsFragment"
+        android:label="MovieDetailsFragment" >
+        <argument
+            android:name="movie_arg"
+            app:argType="com.sideki.movieapp.model.data.Movie" />
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_moviesListFragment"
+            app:destination="@id/moviesListFragment" />
+        <argument
+            android:name="position"
+            app:argType="integer" />
+    </fragment>
+</navigation>

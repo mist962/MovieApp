@@ -1,12 +1,16 @@
 package com.sideki.movieapp.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sideki.movieapp.R
 import com.sideki.movieapp.model.data.Movie
+import com.sideki.movieapp.view.fragments.MoviesListFragment
+import com.sideki.movieapp.view.fragments.MoviesListFragmentDirections
 import kotlinx.android.synthetic.main.item_movie.view.*
 
 class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
@@ -37,7 +41,9 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
         holder.itemView.rating_bar.rating = (curItem.voteAverage) / 2
 
         holder.itemView.item_movie.setOnClickListener {
-
+            val action = MoviesListFragmentDirections.actionMoviesListFragmentToMovieDetailsFragment(curItem, position)
+            Log.d("TAG", "onBindViewHolder: $position")
+            holder.itemView.findNavController().navigate(action)
         }
     }
 

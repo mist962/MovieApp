@@ -1,16 +1,13 @@
-package com.sideki.movieapp.activities
+package com.sideki.movieapp.view.fragments
 
-import android.content.Context
-import android.graphics.Rect
-import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.SearchView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.sideki.movieapp.R
 import com.sideki.movieapp.adapters.MovieAdapter
@@ -18,20 +15,20 @@ import com.sideki.movieapp.model.repository.MovieRepository
 import com.sideki.movieapp.utils.API_KEY
 import com.sideki.movieapp.viewmodel.MovieViewModel
 import com.sideki.movieapp.viewmodel.MovieViewModelFactory
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_movies_list.*
 
+class MoviesListFragment : Fragment(R.layout.fragment_movies_list) {
 
-class MovieListActivity : AppCompatActivity() {
+    val args by navArgs<MoviesListFragmentArgs>()
 
     private val repository = MovieRepository()
     private var movieViewModel = MovieViewModel(repository)
     private val movieViewModelFactory = MovieViewModelFactory(repository)
     private val adapter by lazy { MovieAdapter() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setActionBar(toolbar)
+    override fun onResume() {
+        super.onResume()
+        activity?.setActionBar(toolbar)
 
         movieViewModel =
             ViewModelProvider(this, movieViewModelFactory).get(MovieViewModel::class.java)
@@ -40,17 +37,18 @@ class MovieListActivity : AppCompatActivity() {
 
         getPopularMovies()
         searchMovies()
+        Log.d("TAG", "Scrolled : ${args.recyclerPosition}")
+
     }
 
     private fun getPopularMovies() {
         movieViewModel.getPopularMovies(API_KEY, "1")
-        movieViewModel.mPopularMovies.observe(this, { response ->
+        movieViewModel.mPopularMovies.observe(viewLifecycleOwner, { response ->
             if (response.isSuccessful) {
                 Log.d("TAG", "Popular Movie : $response")
                 response.body()?.results?.let {
                     adapter.setPopularMovies(it)
-                    recyclerview.scrollToPosition(0)
-
+                    recyclerview.scrollToPosition(args.recyclerPosition)
                     //Проблема в том что при сильном скроле делается много однотипных запросов, сраницы начинают повторяться
                     recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                         override fun onScrollStateChanged(
@@ -60,7 +58,7 @@ class MovieListActivity : AppCompatActivity() {
                             if (!recyclerView.canScrollVertically(1)) {
                                 movieViewModel.getPopularMoviesNextPage()
                                 movieViewModel.mPopularMoviesNextPage.observe(
-                                    this@MovieListActivity,
+                                    viewLifecycleOwner,
                                     { response ->
                                         Log.d("TAG", "Popular Movie : $response")
                                         response.body()?.results?.let {
@@ -86,7 +84,7 @@ class MovieListActivity : AppCompatActivity() {
                     getPopularMovies()
                 } else {
                     movieViewModel.searchMovies(API_KEY, newText.toString(), "1")
-                    movieViewModel.mSearchMovies.observe(this@MovieListActivity, { resposne ->
+                    movieViewModel.mSearchMovies.observe(viewLifecycleOwner, { resposne ->
                         Log.d("TAG", "Popular Movie : $resposne")
                         resposne.body()?.results?.let {
                             adapter.setSearchMovies(it)
@@ -102,7 +100,7 @@ class MovieListActivity : AppCompatActivity() {
                                 if (!recyclerView.canScrollVertically(1)) {
                                     movieViewModel.searchMoviesNextPage(newText.toString())
                                     movieViewModel.mSearchMoviesNextPage.observe(
-                                        this@MovieListActivity,
+                                        viewLifecycleOwner,
                                         { response ->
                                             Log.d("TAG", "Fight Movie : $response")
                                             response.body()?.results?.let {
@@ -119,23 +117,4 @@ class MovieListActivity : AppCompatActivity() {
         })
     }
 
-    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        if (ev?.action == MotionEvent.ACTION_DOWN) {
-            val v: View? = currentFocus
-            if (v is EditText) {
-                val outRect = Rect()
-                v.getGlobalVisibleRect(outRect)
-                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
-                    v.clearFocus()
-                    val inputMethodManager =
-                        getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
-                }
-            }
-        }
-        return super.dispatchTouchEvent(ev)
-    }
 }
-
-
-
